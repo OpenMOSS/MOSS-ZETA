@@ -1,0 +1,39 @@
+{
+  "policyMode": "brain_policy",
+  "policyTransport": "lumine_session",
+  "policyRendering": {
+    "version": "think-memory-minimap-compact-v1",
+    "response_format": "full",
+    "generation_prefix": "<think>",
+    "template_sha256": "090eb973c1aa4c792575057cea20cc81718569735313d5bba904cf1ef09072e0"
+  },
+  "allowThinking": true,
+  "policyStreaming": true,
+  "hfScheduling": "fixed_cadence",
+  "hfCaptureIntervalMs": 200,
+  "hfPackageDurationMs": 200,
+  "hfSubmissionOffsetMs": 80,
+  "hfActionStartDelayMs": 200,
+  "policyWindowMaxRounds": 16,
+  "policyWindowKeepRounds": 8,
+  "brainProvider": {
+    "inheritPolicy": false,
+    "maxTokens": 16384
+  },
+  "brainFallbackScope": "memory_think",
+  "policyHotSwapEnabled": false,
+  "brainPrefillEnabled": false,
+  "ocrEnabled": true,
+  "policyOcrManagedService": false,
+  "taskResultOcrEnabled": false,
+  "maxSteps": 25,
+  "maxStepsUnlimited": true,
+  "maxTokens": null,
+  "brainScheduler": {
+    "memoryFallbackIntervalMs": 10000,
+    "instructionFallbackEnabled": false,
+    "maxActionsWithoutMemoryUpdate": 20,
+    "maxActionsWithoutInstructionUpdate": 40
+  },
+  "runDurationMs": 2400000
+}

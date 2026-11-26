@@ -1,0 +1,14 @@
+{
+  "infra": {
+    "repository": "fnlp-agentRL/bvalanche",
+    "commit": "eee8723494fdf02ed9812b048381a8f400f9fc34"
+  },
+  "website": {
+    "repository": "fnlp-agentRL/bvalanche",
+    "commit": "39a615b4b5ad91dc33465bb6592408ccf60cddd0"
+  },
+  "harness": {
+    "repository": "fnlp-agentRL/zetagame",
+    "commit": "f9478ee436d8cc3ac7f50bccdb56fe9e6db3592e"
+  }
+}

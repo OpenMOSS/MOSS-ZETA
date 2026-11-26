@@ -1,0 +1,755 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright contributors to the vLLM project
+
+import itertools
+from collections.abc import Sequence
+from dataclasses import dataclass
+from typing import Literal, overload
+
+from vllm.distributed.kv_events import KVCacheEvent
+from vllm.logger import init_logger
+from vllm.utils.math_utils import cdiv
+from vllm.v1.core.kv_cache_coordinator import get_kv_cache_coordinator
+from vllm.v1.core.kv_cache_metrics import KVCacheMetricsCollector
+from vllm.v1.core.kv_cache_utils import KVCacheBlock
+from vllm.v1.core.sched.output import StreamingKVCompaction
+from vllm.v1.kv_cache_interface import (
+    FullAttentionSpec,
+    KVCacheConfig,
+    MambaSpec,
+)
+from vllm.v1.metrics.stats import PrefixCacheStats
+from vllm.v1.request import Request
+
+logger = init_logger(__name__)
+
+
+@dataclass
+class KVCacheBlocks:
+    """
+    The allocation result of KVCacheManager, work as the interface between
+    Scheduler and KVCacheManager, to hide KVCacheManager's internal data
+    structure from the Scheduler.
+    """
+
+    blocks: tuple[Sequence[KVCacheBlock], ...]
+    """
+    `blocks[i][j]` refers to the i-th kv_cache_group
+    and the j-th block of tokens.We don't use block of
+    tokens as the outer dimension because it assumes all
+    kv_cache_groups have the same number of blocks, which is true for now but
+    will be broken if we want to give different block_size to different
+    kv_cache_groups in the future.
+
+    Each single type KVCacheBlocks could be represented as:
+    - list[KVCacheBlock] for more than one KVCacheBlock
+    - an empty tuple for requests without KVCacheBlock
+      (a precomputed KVCacheBlocks is in KVCacheManager to avoid GC overhead)
+    """
+
+    def __add__(self, other: "KVCacheBlocks") -> "KVCacheBlocks":
+        """Adds two KVCacheBlocks instances."""
+        return KVCacheBlocks(
+            tuple(
+                list(itertools.chain(blk1, blk2))
+                for blk1, blk2 in zip(self.blocks, other.blocks)
+            )
+        )
+
+    @overload
+    def get_block_ids(
+        self,
+        allow_none: Literal[False] = False,
+    ) -> tuple[list[int], ...]: ...
+
+    @overload
+    def get_block_ids(
+        self,
+        allow_none: Literal[True] = True,
+    ) -> tuple[list[int], ...] | None: ...
+
+    def get_block_ids(
+        self,
+        allow_none: bool = False,
+    ) -> tuple[list[int], ...] | None:
+        """
+        Converts the KVCacheBlocks instance to block_ids.
+
+        Returns:
+            tuple[list[int], ...]: A tuple of lists where:
+                - the outer tuple corresponds to KV cache groups
+                - each inner list contains the block_ids of the blocks in that
+                  group
+        """
+        if allow_none and all(len(group) == 0 for group in self.blocks):
+            return None
+        return tuple([blk.block_id for blk in group] for group in self.blocks)
+
+    def get_unhashed_block_ids(self) -> list[int]:
+        """Get block_ids of unhashed blocks from KVCacheBlocks instance."""
+        assert len(self.blocks) == 1, "Only one group is supported"
+        return [block.block_id for block in self.blocks[0] if block.block_hash is None]
+
+    def get_unhashed_block_ids_all_groups(self) -> list[list[int]]:
+        """Get block_ids of unhashed blocks from KVCacheBlocks instance."""
+        # Skip padding blocks.
+        return [
+            [
+                block.block_id
+                for block in group
+                if block.block_hash is None and not block.is_null
+            ]
+            for group in self.blocks
+        ]
+
+    def new_empty(self) -> "KVCacheBlocks":
+        """
+        Creates a new KVCacheBlocks instance with no blocks.
+        """
+        return KVCacheBlocks(tuple(() for _ in range(len(self.blocks))))
+
+
+class KVCacheManager:
+    def __init__(
+        self,
+        kv_cache_config: KVCacheConfig,
+        max_model_len: int,
+        hash_block_size: int,
+        max_num_batched_tokens: int | None = None,
+        enable_caching: bool = True,
+        use_eagle: bool = False,
+        log_stats: bool = False,
+        enable_kv_cache_events: bool = False,
+        dcp_world_size: int = 1,
+        pcp_world_size: int = 1,
+        metrics_collector: KVCacheMetricsCollector | None = None,
+    ) -> None:
+        self.max_model_len = max_model_len
+        # When unset, fall back to `max_model_len` so the recycling-aware cap
+        # collapses to the prior (uncapped) admission behavior. The scheduler
+        # always supplies the real value at runtime.
+        if max_num_batched_tokens is None:
+            max_num_batched_tokens = max_model_len
+
+        self.enable_caching = enable_caching
+        self.use_eagle = use_eagle
+        self.log_stats = log_stats
+        self.metrics_collector = metrics_collector
+        # FIXME: make prefix cache stats conditional on log_stats. We still need
+        # this comment because when the log stats is enabled there are still
+        # potential configs we could expose in the future.
+        self.prefix_cache_stats = PrefixCacheStats() if log_stats else None
+
+        self.coordinator = get_kv_cache_coordinator(
+            kv_cache_config=kv_cache_config,
+            max_model_len=self.max_model_len,
+            max_num_batched_tokens=max_num_batched_tokens,
+            use_eagle=self.use_eagle,
+            enable_caching=self.enable_caching,
+            enable_kv_cache_events=enable_kv_cache_events,
+            dcp_world_size=dcp_world_size,
+            pcp_world_size=pcp_world_size,
+            hash_block_size=hash_block_size,
+            metrics_collector=self.metrics_collector,
+        )
+        self.num_kv_cache_groups = len(kv_cache_config.kv_cache_groups)
+        self.block_pool = self.coordinator.block_pool
+        self.kv_cache_config = kv_cache_config
+
+        # Pre-constructed KVCacheBlocks with no blocks, callers should use this
+        # via create_kv_cache_blocks instead of creating new ones to avoid GC
+        # overhead.
+        #
+        # We use nested tuples to ensure the empty KVCacheBlocks is immutable.
+        self.empty_kv_cache_blocks = KVCacheBlocks(
+            tuple(() for _ in range(self.num_kv_cache_groups))
+        )
+        self._pending_streaming_compaction_blocks: dict[
+            str, list[KVCacheBlock]
+        ] = {}
+
+    @property
+    def usage(self) -> float:
+        """Get the KV cache usage.
+
+        Returns:
+            The KV cache usage (between 0.0 and 1.0).
+        """
+        return self.block_pool.get_usage()
+
+    def make_prefix_cache_stats(self) -> PrefixCacheStats | None:
+        """Get (and reset) the prefix cache stats.
+
+        Returns:
+            The current prefix caching stats, or None if logging is disabled.
+        """
+        if not self.log_stats:
+            return None
+        stats = self.prefix_cache_stats
+        self.prefix_cache_stats = PrefixCacheStats()
+        return stats
+
+    def get_computed_blocks(self, request: Request) -> tuple[KVCacheBlocks, int]:
+        """Get the computed (cached) blocks for the request.
+        Note that the computed blocks must be full.
+
+        Args:
+            request: The request to get the computed blocks.
+
+        Returns:
+            A tuple containing:
+                - A list of blocks that are computed for the request.
+                - The number of computed tokens.
+        """
+        # We skip finding the prefix cache hit when prefix caching is
+        # disabled or the request is marked as skipping kv cache read
+        # (which happens when the request requires prompt logprobs
+        # or calls a pooling model with all pooling).
+        if not self.enable_caching or request.skip_reading_prefix_cache:
+            return self.empty_kv_cache_blocks, 0
+
+        # NOTE: When all tokens hit the cache, we must recompute the last token
+        # to obtain logits. Thus, set max_cache_hit_length to prompt_length - 1.
+        # This can trigger recomputation of an entire block, rather than just
+        # the single last token, because allocate_slots() requires
+        # num_computed_tokens to be block-size aligned. Removing this limitation
+        # could slightly improve performance in the future.
+        max_cache_hit_length = request.num_tokens - 1
+        computed_blocks, num_new_computed_tokens = (
+            self.coordinator.find_longest_cache_hit(
+                request.block_hashes, max_cache_hit_length
+            )
+        )
+
+        if self.log_stats:
+            assert self.prefix_cache_stats is not None
+            self.prefix_cache_stats.record(
+                num_tokens=request.num_tokens,
+                num_hits=num_new_computed_tokens,
+                preempted=request.num_preemptions > 0,
+            )
+
+        return self.create_kv_cache_blocks(computed_blocks), num_new_computed_tokens
+
+    def can_fit_full_sequence(
+        self,
+        request: Request,
+        num_new_computed_tokens: int = 0,
+        new_computed_blocks: KVCacheBlocks | None = None,
+        num_external_computed_tokens: int = 0,
+        num_encoder_tokens: int = 0,
+    ) -> bool:
+        """Check if the KV cache has enough free blocks to hold the full
+        sequence, accounting for prefix cache hits and sliding window.
+
+        This is used as an admission gate to prevent over-admitting requests
+        when chunked prefill would otherwise only check the first chunk.
+        """
+        if new_computed_blocks is not None:
+            new_computed_block_list = new_computed_blocks.blocks
+        else:
+            new_computed_block_list = self.empty_kv_cache_blocks.blocks
+
+        num_local_computed_tokens = (
+            request.num_computed_tokens + num_new_computed_tokens
+        )
+        total_computed_tokens = min(
+            num_local_computed_tokens + num_external_computed_tokens,
+            self.max_model_len,
+        )
+        full_num_tokens = min(request.num_tokens, self.max_model_len)
+
+        num_blocks_to_allocate = self.coordinator.get_num_blocks_to_allocate(
+            request_id=request.request_id,
+            num_tokens=full_num_tokens,
+            new_computed_blocks=new_computed_block_list,
+            num_encoder_tokens=num_encoder_tokens,
+            total_computed_tokens=total_computed_tokens,
+            num_tokens_main_model=full_num_tokens,
+            apply_admission_cap=True,
+        )
+
+        return num_blocks_to_allocate <= self.block_pool.get_num_free_blocks()
+
+    def allocate_slots(
+        self,
+        request: Request,
+        num_new_tokens: int,
+        num_new_computed_tokens: int = 0,
+        new_computed_blocks: KVCacheBlocks | None = None,
+        num_lookahead_tokens: int = 0,
+        num_external_computed_tokens: int = 0,
+        delay_cache_blocks: bool = False,
+        num_encoder_tokens: int = 0,
+    ) -> KVCacheBlocks | None:
+        """Add slots for a request with new tokens to append.
+
+        Args:
+            request: The request to allocate slots.
+            num_new_tokens: The number of new tokens to be allocated and computed.
+            num_new_computed_tokens: The number of new computed tokens just
+                hitting the prefix caching, excluding external tokens.
+            new_computed_blocks: The cached blocks for the above new computed
+                tokens, grouped as a tuple by kv cache groups.
+            num_lookahead_tokens: The number of speculative tokens to allocate.
+                This is used by spec decode proposers with kv-cache such
+                as eagle.
+            num_external_computed_tokens: The number of tokens that their
+                KV caches are not cached by vLLM but cached by the connector.
+            delay_cache_blocks: Whether to skip caching the blocks. This is
+                used by P/D when allocating blocks used in a KV transfer
+                which will complete in a future step.
+            num_encoder_tokens: The number of encoder tokens to allocate for
+                cross-attention in encoder-decoder models(e.g., Whisper).
+                For decoder-only models, this should be 0.
+
+        Blocks layout:
+        ```
+        ----------------------------------------------------------------------
+        | < comp > | < new_comp > | < ext_comp >  | < new >  | < lookahead > |
+        ----------------------------------------------------------------------
+                                                  |   < to be computed >     |
+        ----------------------------------------------------------------------
+                                  |            < to be allocated >           |
+        ----------------------------------------------------------------------
+                                  | < to be cached (roughly, |
+                                  | details below)>          |
+        ----------------------------------------------------------------------
+        | Prefix-cached tokens from either vLLM   |
+        | or connector. Can be safely removed if  |
+        | they are outside sliding window.        |
+        ----------------------------------------------------------------------
+        |   < cached by vLLM >    | not cached by |
+                                  | vLLM, but     |
+        | ref_cnt  | ref_cnt not  | cached by     |
+        | increased| increased yet| connector     |
+        ----------------------------------------------------------------------
+        ```
+
+        Abbrivations:
+
+        ```
+        comp      = request.num_computed_tokens
+        new_comp  = num_new_computed_tokens
+                  = len(new_computed_blocks) * block_size
+        ext_comp  = num_external_computed_tokens, cached by the connector
+        new       = num_new_tokens, including unverified draft tokens
+        lookahead = num_lookahead_tokens
+        ```
+
+        NOTE: for new tokens which include both verified and unverified draft
+        tokens, we only cache the verified tokens (by capping the number at
+        `request.num_tokens`).
+
+        The allocation has three stages:
+        - Free unnecessary blocks in `comp` and check
+           if we have sufficient free blocks (return None if not).
+        - Handle prefix tokens (`comp + new_comp + ext_comp`):
+            - Free unnecessary blocks (e.g. outside sliding window)
+            - Allocate new blocks for `ext_comp` tokens inside
+              sliding window
+        - Allocate new blocks for tokens to be computed (`new + lookahead`)
+
+        Returns:
+            A list of new allocated blocks.
+        """
+        # When loading KV data asynchronously, we may have zero new tokens to
+        # compute while still allocating slots for externally computed tokens.
+        if num_new_tokens == 0 and num_external_computed_tokens == 0:
+            raise ValueError(
+                "num_new_tokens must be greater than 0 when there are no "
+                "external computed tokens"
+            )
+
+        if new_computed_blocks is not None:
+            new_computed_block_list = new_computed_blocks.blocks
+        else:
+            new_computed_block_list = self.empty_kv_cache_blocks.blocks
+
+        # The number of computed tokens is the number of computed tokens plus
+        # the new prefix caching hits
+        num_local_computed_tokens = (
+            request.num_computed_tokens + num_new_computed_tokens
+        )
+        total_computed_tokens = min(
+            num_local_computed_tokens + num_external_computed_tokens,
+            self.max_model_len,
+        )
+        num_tokens_main_model = total_computed_tokens + num_new_tokens
+        num_tokens_need_slot = min(
+            num_tokens_main_model + num_lookahead_tokens,
+            self.max_model_len,
+        )
+
+        # Free the blocks that are skipped during the attention computation
+        # (e.g., tokens outside the sliding window).
+        # We can do this even if we cannot schedule this request due to
+        # insufficient free blocks.
+        # Should call this function before allocating new blocks to reduce
+        # the number of evicted blocks.
+        self.coordinator.remove_skipped_blocks(
+            request.request_id, total_computed_tokens
+        )
+
+        num_blocks_to_allocate = self.coordinator.get_num_blocks_to_allocate(
+            request_id=request.request_id,
+            num_tokens=num_tokens_need_slot,
+            new_computed_blocks=new_computed_block_list,
+            num_encoder_tokens=num_encoder_tokens,
+            total_computed_tokens=num_local_computed_tokens
+            + num_external_computed_tokens,
+            num_tokens_main_model=num_tokens_main_model,
+        )
+
+        if num_blocks_to_allocate > self.block_pool.get_num_free_blocks():
+            # Cannot allocate new blocks
+            return None
+
+        if (
+            new_computed_block_list is not self.empty_kv_cache_blocks.blocks
+            or num_external_computed_tokens > 0
+        ):
+            # Append the new computed blocks to the request blocks until now to
+            # avoid the case where the new blocks cannot be allocated.
+            self.coordinator.allocate_new_computed_blocks(
+                request_id=request.request_id,
+                new_computed_blocks=new_computed_block_list,
+                num_local_computed_tokens=num_local_computed_tokens,
+                num_external_computed_tokens=num_external_computed_tokens,
+            )
+
+        new_blocks = self.coordinator.allocate_new_blocks(
+            request.request_id,
+            num_tokens_need_slot,
+            num_tokens_main_model,
+            num_encoder_tokens,
+        )
+
+        # P/D: delay caching blocks if we have to recv from
+        # remote. Update state for locally cached blocks.
+        if (
+            not self.enable_caching
+            or delay_cache_blocks
+            or request.skip_writing_prefix_cache
+        ):
+            return self.create_kv_cache_blocks(new_blocks)
+
+        # NOTE(woosuk): We want to commit (cache) up to num_local_computed_tokens
+        # + num_external_computed_tokens + num_new_tokens, but must exclude
+        # "non-committable" tokens (e.g., draft tokens that could be rejected).
+        # Therefore, we cap the number at `request.num_tokens`, ensuring only
+        # "finalized" tokens are cached.
+        num_tokens_to_cache = min(
+            total_computed_tokens + num_new_tokens,
+            request.num_tokens,
+        )
+        self.coordinator.cache_blocks(request, num_tokens_to_cache)
+
+        return self.create_kv_cache_blocks(new_blocks)
+
+    def free(self, request: Request) -> None:
+        """Free the blocks allocated for the request.
+        We free the blocks in reverse order so that the tail blocks are evicted
+        first when caching is enabled.
+
+        Args:
+            request: The request to free the blocks.
+        """
+        pending_blocks = self._pending_streaming_compaction_blocks.pop(
+            request.request_id, None
+        )
+        if pending_blocks:
+            self.block_pool.free_blocks(reversed(pending_blocks))
+        self.coordinator.free(request.request_id)
+
+    def prepare_streaming_kv_compaction(
+        self,
+        request: Request,
+        sink_token_count: int,
+        suffix_start: int,
+        reserve_new_tokens: int = 0,
+        source_token_ranges: tuple[tuple[int, int], ...] | None = None,
+    ) -> StreamingKVCompaction | None:
+        """Allocate compact destination blocks while pinning source blocks.
+
+        The worker copies source KV/state into the destination blocks before
+        the next streaming input is executed. Source blocks are released by
+        :meth:`finalize_streaming_kv_compaction` after the worker returns.
+        Returns ``None`` when compaction cannot be performed safely, allowing
+        the scheduler to fall back to a correctness rebuild.
+        """
+        request_id = request.request_id
+        if request_id in self._pending_streaming_compaction_blocks:
+            raise RuntimeError("streaming KV compaction is already pending")
+        old_num_tokens = request.num_computed_tokens
+        if source_token_ranges is None:
+            source_token_ranges = tuple(
+                (start, end)
+                for start, end in (
+                    (0, sink_token_count),
+                    (suffix_start, old_num_tokens),
+                )
+                if start < end
+            )
+        if not source_token_ranges:
+            return None
+        previous_end = 0
+        compact_num_tokens = 0
+        for index, (start, end) in enumerate(source_token_ranges):
+            if not (0 <= start < end <= old_num_tokens):
+                raise ValueError("invalid streaming KV compaction token range")
+            if index and start < previous_end:
+                raise ValueError("streaming KV compaction ranges must be ordered")
+            previous_end = end
+            compact_num_tokens += end - start
+        if compact_num_tokens == 0:
+            # There is no cache state to copy (for example window_size=1 with
+            # an empty sink). Let the scheduler use the exact rebuild path.
+            return None
+        if not 0 < compact_num_tokens <= old_num_tokens:
+            raise ValueError("invalid streaming KV compaction token ranges")
+        if reserve_new_tokens < 0:
+            raise ValueError("reserve_new_tokens must be non-negative")
+        post_update_num_tokens = compact_num_tokens + reserve_new_tokens
+
+        managers = self.coordinator.single_type_managers
+        specs = [group.kv_cache_spec for group in self.kv_cache_config.kv_cache_groups]
+        source_blocks = self.coordinator.get_blocks(request_id)
+        if not (len(managers) == len(specs) == len(source_blocks)):
+            raise RuntimeError("KV cache group metadata is inconsistent")
+
+        recurrent_source_blocks: list[KVCacheBlock | None] = []
+        for spec, blocks in zip(specs, source_blocks):
+            if isinstance(spec, FullAttentionSpec):
+                recurrent_source_blocks.append(None)
+            elif isinstance(spec, MambaSpec) and spec.mamba_cache_mode == "align":
+                source_state_idx = (old_num_tokens - 1) // spec.block_size
+                if source_state_idx >= len(blocks) or blocks[source_state_idx].is_null:
+                    # The scheduler cannot identify a valid latest recurrent
+                    # state. Let the streaming policy use the exact rebuild
+                    # path instead of emitting a plan that will fail or copy
+                    # corrupted state in the worker.
+                    return None
+                recurrent_source_blocks.append(blocks[source_state_idx])
+            else:
+                return None
+
+        num_real_blocks_needed = 0
+        for spec in specs:
+            if isinstance(spec, FullAttentionSpec):
+                # Source blocks stay pinned until the worker has copied them.
+                # Reserve the blocks needed by the immediately appended turn
+                # as well, otherwise allocation of the compact destination can
+                # leave the request unable to enter the worker that performs
+                # the copy and releases the source lineage.
+                num_real_blocks_needed += cdiv(
+                    post_update_num_tokens, spec.block_size
+                )
+            elif isinstance(spec, MambaSpec) and spec.mamba_cache_mode == "align":
+                num_real_blocks_needed += 1
+                if cdiv(post_update_num_tokens, spec.block_size) > cdiv(
+                    compact_num_tokens, spec.block_size
+                ):
+                    # preprocess_mamba needs both the compact active-state
+                    # block and the next active-state block in the first step.
+                    num_real_blocks_needed += 1
+            else:
+                return None
+        if num_real_blocks_needed > self.block_pool.get_num_free_blocks():
+            return None
+
+        owned_source_blocks: list[KVCacheBlock] = []
+        for blocks in source_blocks:
+            for block in blocks:
+                if block.is_null:
+                    continue
+                # Cache surgery mutates request lineage and is unsafe when a
+                # physical block is shared by another active request.
+                if block.ref_cnt != 1:
+                    return None
+                owned_source_blocks.append(block)
+
+        source_block_ids = tuple(
+            [block.block_id for block in blocks] for blocks in source_blocks
+        )
+        destination_blocks: list[list[KVCacheBlock]] = []
+        for manager, spec in zip(managers, specs):
+            if isinstance(spec, FullAttentionSpec):
+                num_blocks = cdiv(compact_num_tokens, spec.block_size)
+                blocks = self.block_pool.get_new_blocks(num_blocks)
+                manager.new_block_ids.extend(block.block_id for block in blocks)
+            else:
+                assert isinstance(spec, MambaSpec)
+                num_blocks = cdiv(compact_num_tokens, spec.block_size)
+                blocks = [self.block_pool.null_block] * (num_blocks - 1)
+                blocks.append(self.block_pool.get_new_blocks(1)[0])
+                allocated_reqs = getattr(manager, "_allocated_block_reqs", None)
+                if allocated_reqs is not None:
+                    allocated_reqs.add(request_id)
+                last_state_block_idx = getattr(manager, "last_state_block_idx", None)
+                if last_state_block_idx is not None:
+                    last_state_block_idx.pop(request_id, None)
+
+            manager.req_to_blocks[request_id] = blocks
+            manager.num_cached_block.pop(request_id, None)
+            destination_blocks.append(blocks)
+
+        # The retained blocks no longer represent their original hash chain.
+        self.block_pool.evict_blocks(
+            {block.block_id for block in owned_source_blocks}
+        )
+        self._pending_streaming_compaction_blocks[request_id] = owned_source_blocks
+
+        destination_block_ids = tuple(
+            [block.block_id for block in blocks] for blocks in destination_blocks
+        )
+        recurrent_state_copy_block_ids: list[tuple[int, int] | None] = []
+        for spec, source_state_block, blocks in zip(
+            specs, recurrent_source_blocks, destination_blocks
+        ):
+            if isinstance(spec, FullAttentionSpec):
+                recurrent_state_copy_block_ids.append(None)
+                continue
+            assert isinstance(spec, MambaSpec)
+            assert source_state_block is not None
+            destination_state_idx = (compact_num_tokens - 1) // spec.block_size
+            destination_state_block = blocks[destination_state_idx]
+            if destination_state_block.is_null:
+                raise RuntimeError(
+                    "streaming KV compaction allocated a null recurrent-state block"
+                )
+            recurrent_state_copy_block_ids.append(
+                (source_state_block.block_id, destination_state_block.block_id)
+            )
+        return StreamingKVCompaction(
+            req_id=request_id,
+            sink_token_count=sink_token_count,
+            suffix_start=suffix_start,
+            old_num_computed_tokens=old_num_tokens,
+            compact_num_computed_tokens=compact_num_tokens,
+            source_block_ids=source_block_ids,
+            destination_block_ids=destination_block_ids,
+            recurrent_state_copy_block_ids=tuple(recurrent_state_copy_block_ids),
+            source_token_ranges=source_token_ranges,
+        )
+
+    def finalize_streaming_kv_compaction(self, request_id: str) -> None:
+        """Release source blocks after the worker has completed GPU copies."""
+        blocks = self._pending_streaming_compaction_blocks.pop(request_id, None)
+        if blocks:
+            self.block_pool.free_blocks(reversed(blocks))
+
+    def remove_skipped_blocks(
+        self, request_id: str, total_computed_tokens: int
+    ) -> None:
+        """Remove the blocks that are no longer needed from `blocks` and replace
+        the removed blocks with null_block.
+
+        Args:
+            request_id: The request ID.
+            total_computed_tokens: The total number of computed tokens, including
+                local computed tokens and external computed tokens.
+        """
+        self.coordinator.remove_skipped_blocks(request_id, total_computed_tokens)
+
+    def evict_blocks(self, block_ids: set[int]) -> None:
+        """evict blocks from the prefix cache by their block IDs.
+
+        Args:
+            block_ids: Set of block IDs to evict from cache.
+        """
+        self.block_pool.evict_blocks(block_ids)
+
+    def reset_prefix_cache(self) -> bool:
+        """Reset prefix cache. This function may be used in RLHF
+        flows to invalidate prefix caching after the weights are updated,
+        or used for resetting prefix caching status for benchmarking.
+
+        Returns:
+            bool: True if the prefix cache is successfully reset,
+            False otherwise.
+        """
+        if not self.block_pool.reset_prefix_cache():
+            return False
+        if self.log_stats:
+            assert self.prefix_cache_stats is not None
+            self.prefix_cache_stats.reset = True
+        return True
+
+    def get_num_common_prefix_blocks(self, running_request_id: str) -> list[int]:
+        """Calculate the number of common prefix blocks for each kv cache group.
+
+        The function selects a running request and iterates through its blocks.
+        A block is considered a common prefix block if ALL requests with
+        allocated KV cache share it (i.e., ref_cnt equals the number of entries
+        in req_to_blocks).
+
+        NOTE(woosuk): The number of requests with allocated KV cache is **greater
+        than or equal to** the number of requests scheduled in the current step.
+        This is because having allocated KV cache only indicates that:
+        1. The request has not yet finished, and
+        2. The request holds its blocks unfreed.
+
+        While all scheduled requests must have allocated KV cache, the inverse
+        is not necessarily true. There may be requests with allocated KV cache
+        that are not scheduled in the current step.
+
+        This can result in an edge case where the number of common prefix blocks
+        is 0, even though all scheduled requests share a common prefix. This
+        occurs because there may be unscheduled requests that do not share the
+        common prefix. Currently, this case cannot be easily detected, so the
+        function returns 0 in such cases.
+
+        Args:
+            running_request_id: The request ID of any running request, used to
+                identify the common prefix blocks.
+
+        Returns:
+            list[int]: The number of common prefix blocks for each kv cache
+            group.
+        """
+        return self.coordinator.get_num_common_prefix_blocks(running_request_id)
+
+    def take_events(self) -> list[KVCacheEvent]:
+        """Take the KV cache events from the block pool.
+
+        Returns:
+            A list of KV cache events.
+        """
+        return self.block_pool.take_events()
+
+    def get_blocks(self, request_id: str) -> KVCacheBlocks:
+        """Get the blocks of a request."""
+        return self.create_kv_cache_blocks(self.coordinator.get_blocks(request_id))
+
+    def get_block_ids(self, request_id: str) -> tuple[list[int], ...]:
+        """Get the block ids of a request."""
+        return self.get_blocks(request_id).get_block_ids()
+
+    def cache_blocks(self, request: Request, num_computed_tokens: int) -> None:
+        """Cache the blocks for the request, if enabled.
+
+        Args:
+            request: The request to cache the blocks.
+            num_computed_tokens: The number of computed tokens, including tokens
+                that are already cached and tokens to be cached.
+        """
+        if self.enable_caching and not request.skip_writing_prefix_cache:
+            self.coordinator.cache_blocks(request, num_computed_tokens)
+
+    def create_kv_cache_blocks(
+        self, blocks: tuple[list[KVCacheBlock], ...]
+    ) -> KVCacheBlocks:
+        # Only create new KVCacheBlocks for non-empty blocks
+        return KVCacheBlocks(blocks) if any(blocks) else self.empty_kv_cache_blocks
+
+    def take_new_block_ids(self) -> list[int]:
+        """Drain and return new attention block IDs for zeroing."""
+        ids: list[int] = []
+        for mgr in self.coordinator.single_type_managers:
+            ids.extend(mgr.take_new_block_ids())
+        return ids
+
+    def new_step_starts(self) -> None:
+        """Called when a new step is started."""
+        self.coordinator.new_step_starts()

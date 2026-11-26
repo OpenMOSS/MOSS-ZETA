@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#ffffff">
+  <meta name="description" content="ZETA：面向开放世界游戏的实时视觉、思考与动作系统。">
+  <meta property="og:type" content="website"><meta property="og:title" content="ZETA — Zeroth Embodied Task Agent"><meta property="og:description" content="视觉决策、自适应思考与持续任务记忆。">
+  <title>ZETA — Zeroth Embodied Task Agent</title>
+  <link rel="icon" href="assets/brand/zeta-logo.png" type="image/png"><link rel="stylesheet" href="styles.css?v=public-20261127"><link rel="stylesheet" href="demos.css"><link rel="stylesheet" href="paper.css">
+  <script src="site-config.js" defer></script><script src="app.js?v=public-20261127" defer></script><script src="demos.js" defer></script><script src="paper.js?v=public-20261127" defer></script>
+</head>
+<body class="project-home">
+  <a class="skip-link" href="#main" data-i18n="skip">跳至内容</a>
+  <header class="site-header"><a class="wordmark" href="./" aria-label="ZETA home"><img src="assets/brand/zeta-logo.png" width="1254" height="1254" alt="">ZETA<span class="brand-period">.</span></a><nav aria-label="主导航" data-i18n-aria="navigation"><a href="#demos" data-i18n="navDemos">演示</a><a href="#approach" data-i18n="navApproach">方法</a><a href="#paper" id="paper-nav" data-i18n="navPaperStory">论文内容</a></nav><button class="language-toggle" type="button" aria-label="Switch to English" id="language-toggle">EN</button></header>
+  <main id="main">
+    <section class="project-intro section-wrap" aria-labelledby="hero-title">
+      <p class="project-expansion">Zeroth Embodied Task Agent</p>
+      <h1 id="hero-title"><span class="project-name"><img class="project-logo" src="assets/brand/zeta-logo.png" width="1254" height="1254" alt="ZETA logo">ZETA</span><span class="project-subtitle" data-i18n="projectSubtitle">面向开放世界游戏的实时智能体</span></h1>
+      <p class="project-summary" data-i18n="projectSummary">由 MOSS-ZETA-preview 驱动，从屏幕画面出发，结合实时控制、按需思考与持续记忆，在 GTA V 中推进长程任务。</p>
+      <div class="publication-links">
+        <a class="publication-link" href="#paper" data-public-paper><svg class="publication-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8Z"/><path d="M14 3v5h5M8.5 12h7M8.5 16h7"/></svg><span data-i18n="projectReport">论文与方法</span></a>
+        <a class="publication-link" href="https://github.com/OpenMOSS/MOSS-ZETA"><!-- GitHub Octicons mark, MIT; see assets/icons/LICENSE.octicons.txt. --><svg class="publication-icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.766 11.328c-2.063-.25-3.516-1.734-3.516-3.656 0-.781.281-1.625.75-2.188-.203-.515-.172-1.609.063-2.062.625-.078 1.468.25 1.968.703.594-.187 1.219-.281 1.985-.281.765 0 1.39.094 1.953.265.484-.437 1.344-.765 1.969-.687.218.422.25 1.515.046 2.047.5.593.766 1.39.766 2.203 0 1.922-1.453 3.375-3.547 3.64.531.344.89 1.094.89 1.954v1.625c0 .468.391.734.86.547C13.781 14.359 16 11.53 16 8.03 16 3.61 12.406 0 7.984 0 3.563 0 0 3.61 0 8.031a7.88 7.88 0 0 0 5.172 7.422c.422.156.828-.125.828-.547v-1.25c-.219.094-.5.156-.75.156-1.031 0-1.64-.562-2.078-1.609-.172-.422-.36-.672-.719-.719-.187-.015-.25-.093-.25-.187 0-.188.313-.328.625-.328.453 0 .844.281 1.25.86.313.452.64.655 1.031.655s.641-.14 1-.5c.266-.265.47-.5.657-.656"/></svg><span data-i18n="projectCode">GitHub 代码</span></a>
+        <a class="publication-link secondary" href="#demos" data-i18n="projectDemos">观看任务演示</a>
+      </div>
+      <figure class="project-video" id="featured-demo"><video id="featured-video" controls controlslist="nodownload" playsinline preload="none" poster="assets/demos/promo.jpg" width="1920" height="1080" src="assets/demos/promo.mp4" aria-label="ZETA 宣传 Demo" data-i18n-aria="featuredVideoLabel"><span data-i18n="featuredFallback">当前浏览器不支持视频播放。</span></video><figcaption><span data-i18n="projectVideoCaption">ZETA 视觉、思考与控制演示</span><span>01:09 · 1080p</span></figcaption></figure>
+    </section>
+    <section class="demos section-wrap" id="demos" aria-labelledby="demos-title"><div class="section-heading"><h2 id="demos-title" data-i18n="newDemosTitle">游戏中的 ZETA</h2><p data-i18n="newDemosIntro">从追捕与交火，到隧道穿行和跃海潜游。</p></div>
+      <div class="demo-toolbar"><div class="demo-filters" role="group" aria-label="视频分类" data-i18n-aria="demoFilterLabel"><button type="button" data-demo-filter="all" aria-pressed="true" data-i18n="demoAll">全部</button><button type="button" data-demo-filter="land" aria-pressed="false" data-i18n="demoLand">驾驶与移动</button><button type="button" data-demo-filter="combat" aria-pressed="false" data-i18n="demoCombat">战斗</button><button type="button" data-demo-filter="water" aria-pressed="false" data-i18n="demoWater">水中动作</button></div><span class="demo-counter" id="demo-counter" aria-live="polite">8 段演示</span></div>
+      <div class="demo-grid" id="demo-grid"><article class="demo-card" data-demo-id="escape" data-category="land"><a class="demo-open" data-demo="escape" href="assets/demos/escape.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/escape.jpg" width="1280" height="720" loading="lazy" alt="成功甩掉警察" data-i18n-alt="demoEscapeAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">01:10</span></div><div class="demo-card-meta"><span data-i18n="categoryLand">驾驶与移动</span><span>GTA V</span></div><h3 data-i18n="demoEscapeTitle">成功甩掉警察</h3><p data-i18n="demoEscapeDescription">从两星追捕到解除通缉，任务提示切换为将车开回车店。</p></a></article>
+<article class="demo-card" data-demo-id="sniper" data-category="combat"><a class="demo-open" data-demo="sniper" href="assets/demos/sniper.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/sniper.jpg" width="1280" height="720" loading="lazy" alt="远距离狙击目标" data-i18n-alt="demoSniperAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:10</span></div><div class="demo-card-meta"><span data-i18n="categoryCombat">战斗</span><span>GTA V</span></div><h3 data-i18n="demoSniperTitle">远距离狙击目标</h3><p data-i18n="demoSniperDescription">通过瞄准镜跟踪远处移动目标，调整准星并射击。</p></a></article>
+
+
+
+
+<article class="demo-card" data-demo-id="aircombat" data-category="combat"><a class="demo-open" data-demo="aircombat" href="assets/demos/aircombat.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/aircombat.jpg" width="1280" height="720" loading="lazy" alt="直升机侧舱空战" data-i18n-alt="demoAircombatAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:31</span></div><div class="demo-card-meta"><span data-i18n="categoryCombat">战斗</span><span>GTA V</span></div><h3 data-i18n="demoAircombatTitle">直升机侧舱空战</h3><p data-i18n="demoAircombatDescription">从直升机侧舱瞄准追来的敌机，连续跟踪射击直至机身起火。</p></a></article>
+<article class="demo-card" data-demo-id="hillchase" data-category="land"><a class="demo-open" data-demo="hillchase" href="assets/demos/hillchase.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/hillchase.jpg" width="1280" height="720" loading="lazy" alt="越野摩托追赶飞机" data-i18n-alt="demoHillchaseAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:37</span></div><div class="demo-card-meta"><span data-i18n="categoryLand">驾驶与移动</span><span>GTA V</span></div><h3 data-i18n="demoHillchaseTitle">越野摩托追赶飞机</h3><p data-i18n="demoHillchaseDescription">沿山地追踪冒烟的飞机，冲下陡坡、跃过公路护栏后继续前进。</p></a></article>
+<article class="demo-card" data-demo-id="tunnel" data-category="land"><a class="demo-open" data-demo="tunnel" href="assets/demos/tunnel.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/tunnel.jpg" width="1280" height="720" loading="lazy" alt="四星追捕下穿越隧道" data-i18n-alt="demoTunnelAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:36</span></div><div class="demo-card-meta"><span data-i18n="categoryLand">驾驶与移动</span><span>GTA V</span></div><h3 data-i18n="demoTunnelTitle">四星追捕下穿越隧道</h3><p data-i18n="demoTunnelDescription">骑摩托车穿过弯曲管道、工地与地铁站，在通缉中连续转向。</p></a></article>
+<article class="demo-card" data-demo-id="dive" data-category="water"><a class="demo-open" data-demo="dive" href="assets/demos/dive.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/dive.jpg" width="1280" height="720" loading="lazy" alt="从码头跃入海中" data-i18n-alt="demoDiveAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:30</span></div><div class="demo-card-meta"><span data-i18n="categoryWater">水中动作</span><span>GTA V</span></div><h3 data-i18n="demoDiveTitle">从码头跃入海中</h3><p data-i18n="demoDiveDescription">从码头跃入海中，下潜游动后重新浮出水面。</p></a></article>
+<article class="demo-card" data-demo-id="chase" data-category="land"><a class="demo-open" data-demo="chase" href="assets/demos/chase.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/chase.jpg" width="1280" height="720" loading="lazy" alt="翻越围栏追赶目标" data-i18n-alt="demoChaseAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:10</span></div><div class="demo-card-meta"><span data-i18n="categoryLand">驾驶与移动</span><span>GTA V</span></div><h3 data-i18n="demoChaseTitle">翻越围栏追赶目标</h3><p data-i18n="demoChaseDescription">追随目标冲入院落，翻过围栏后沿屋顶继续追赶。</p></a></article>
+<article class="demo-card" data-demo-id="demolition" data-category="land"><a class="demo-open" data-demo="demolition" href="assets/demos/demolition.mp4" aria-haspopup="dialog"><div class="demo-poster"><img src="assets/demos/demolition.jpg" width="1280" height="720" loading="lazy" alt="拖塌山坡建筑" data-i18n-alt="demoDemolitionAlt"><span class="demo-play" aria-hidden="true"><svg viewBox="0 0 14 18"><path d="M1 1 13 9 1 17Z"/></svg></span><span class="demo-duration">00:13</span></div><div class="demo-card-meta"><span data-i18n="categoryLand">驾驶与移动</span><span>GTA V</span></div><h3 data-i18n="demoDemolitionTitle">拖塌山坡建筑</h3><p data-i18n="demoDemolitionDescription">驾驶皮卡牵引山坡建筑，随后可见建筑结构坍塌。</p></a></article></div>
+    </section>
+    <section class="abstract-section" id="approach" aria-labelledby="abstract-title"><div class="reading-width"><h2 id="abstract-title" data-i18n="abstractTitle">从实时控制到长程任务</h2><p data-i18n="abstractOne">驾驶需要随时修正方向，目的地却可能在数分钟前就已确定。ZETA 将这两种时间尺度连接起来：System 1 的视觉 Policy 负责快速手柄控制，System 2 的外部 Brain 负责阶段规划与任务记忆。</p><p data-i18n="abstractTwo">Policy 从 Qwen3.5-9B 初始化，通过动作预训练学习控制，再通过指令微调学习何时沿用计划、调整判断或调用 Brain。双路推理减少上下文切换的等待，200ms 调度器把生成的动作落到实际控制窗口，Harness 则在交互过程中维护任务状态。</p></div></section>
+    <section class="paper-section section-wrap" id="paper" aria-labelledby="paper-heading">
+<div class="section-heading">
+<h2 id="paper-heading"><span data-i18n="paperStoryTitle">论文中的 ZETA</span>
+</h2>
+<p><span data-i18n="paperStoryIntro">从模型与数据，到持续交互所需的推理和执行系统。</span>
+</p>
+</div>
+<nav class="paper-contents" aria-label="论文内容目录"><a href="#framework"><span data-i18n="tocFramework">框架</span></a><a href="#data"><span data-i18n="tocData">数据</span></a><a href="#training"><span data-i18n="tocTraining">训练</span></a><a href="#harness"><span data-i18n="tocHarness">Harness</span></a><a href="#realtime"><span data-i18n="tocRuntime">实时推理</span></a>
+</nav>
+<section class="paper-chapter" id="framework" aria-labelledby="framework-title">
+<div class="chapter-copy">
+<h3 id="framework-title"><span data-i18n="frameworkHeading">在三个时间尺度上组织决策</span>
+</h3>
+<p><span data-i18n="frameworkOne">Policy 从当前画面、近期观察与动作历史中预测短时手柄控制，同时决定沿用判断、更新局部计划，还是请求 Brain 重新审视阶段目标。视觉控制和更新决策由同一个自回归模型生成。</span>
+</p>
+<p><span data-i18n="frameworkTwo">阶段指令回答“当前要完成什么”，局部思考回答“此刻如何推进”，任务记忆保留已确认的进度、事实和约束。三者在不同时间尺度上更新，让短时控制始终连接到持续的任务上下文。</span>
+</p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="framework"><a class="paper-image-link" data-figure-link href="assets/paper/framework.png?v=210cc137e916" target="_blank" rel="noopener" aria-label="从视觉观察到持续任务执行"><img data-figure-image src="assets/paper/framework.png?v=210cc137e916" width="2600" height="966" loading="lazy" alt="论文框架图：GTA V画面和历史输入ZETA Policy，结合阶段指令、局部思考和任务记忆，输出手柄动作并连接外部Brain。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>从视觉观察到持续任务执行</strong>
+<p data-figure-description>Policy根据当前画面、近期历史与任务上下文生成控制，并按需请求局部更新或Brain重规划。下方展示两阶段监督训练。</p>
+<p data-figure-note>每个动作包含左右摇杆与两个有序的 100ms 按键状态。</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section class="paper-chapter" id="data" aria-labelledby="data-title">
+<div class="chapter-copy">
+<h3 id="data-title"><span data-i18n="dataHeading">从游戏记录到对齐的训练样本</span>
+</h3>
+<p><span data-i18n="dataOne">动作预训练使用约 <strong>4,000 小时</strong>人类 GTA V 手柄游戏记录，其中自由游玩与任务驱动各约 2,000 小时。指令微调从同一语料的任务部分选取约 <strong>1,200 小时</strong>并补充标注；这些时长统计的是增强前的原始录像。</span>
+</p>
+<p><span data-i18n="dataTwo">视频帧和真实手柄事件先对齐到同一时间轴，再结合阶段指令、局部思考和任务记忆构造样本。Policy 的当前输入包含完整画面、同帧小地图、可用 OCR、近期历史，以及当时有效的任务状态。</span>
+</p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="data"><a class="paper-image-link" data-figure-link href="assets/paper/data.png?v=5c7a50fc96cf" target="_blank" rel="noopener" aria-label="从对齐轨迹到当前决策样本"><img data-figure-image src="assets/paper/data.png?v=5c7a50fc96cf" width="2600" height="1658" loading="lazy" alt="论文数据样本图：对齐的驾驶录像与动作、任务状态的有效时间，以及当前画面、小地图、OCR和空think动作响应。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>从对齐轨迹到当前决策样本</strong>
+<p data-figure-description>画面、真实手柄动作和任务标注共享时间轴；阶段指令、局部思考、任务记忆、历史与当前观察共同构成输入。</p>
+<p data-figure-note>样本将任务状态与当前观察对齐，小地图取自同一帧。</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section class="paper-chapter" id="training" aria-labelledby="training-title">
+<div class="chapter-copy">
+<h3 id="training-title"><span data-i18n="trainingHeading">两阶段训练，学习动作与更新决策</span>
+</h3>
+<p><span data-i18n="trainingOne">Policy 从 Qwen3.5-9B 初始化，第一阶段在视觉—动作序列上学习手柄控制。第二阶段继续微调同一 Policy，使动作依赖任务目标、局部判断与已记录的进度，同时学习何时继续、何时更新思考、何时请求 Brain。Brain 与 OCR 为 Policy 提供规划和视觉文本上下文。</span>
+</p>
+<p><span data-i18n="trainingTwo">动作预训练使用20轮窗口；指令微调使用最多 16 轮的窗口，推进时保留最近 8 轮。只有选中的当前 assistant 响应参与目标监督；任务记忆、输入状态与保留的历史作为上下文。空 think 的关闭标签也有监督，因此“继续执行”是一个明确的模型决策。</span>
+</p>
+<p><span data-i18n="trainingThree">对连续重复的真实整条动作，训练采用 γ=0.5 的重复动作损失衰减；思考和 Brain 字段保持单位权重。配合时序相位增强与中性历史后的专家继续样本，训练关注动作变化以及恢复有效控制。</span>
+</p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="training"><a class="paper-image-link" data-figure-link href="assets/paper/training.png?v=28db6be57fba" target="_blank" rel="noopener" aria-label="两阶段训练与滚动窗口监督"><img data-figure-image src="assets/paper/training.png?v=28db6be57fba" width="2600" height="1775" loading="lazy" alt="论文训练图：20轮动作预训练、16轮保留8轮的指令微调窗口，以及继续执行、局部更新和Brain请求三种响应的监督范围。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>两阶段训练与滚动窗口监督</strong>
+<p data-figure-description>动作预训练采用20轮窗口；指令微调采用16轮、保留8轮。图中展示目标响应在下一窗口转为历史，以及三种响应的监督边界。</p>
+<p data-figure-note>橙色下划线表示参与监督的目标；保留历史和起始think标签作为输入，空think的关闭标签也参与监督。</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section class="paper-chapter" id="harness" aria-labelledby="harness-title">
+<div class="chapter-copy">
+<h3 id="harness-title"><span data-i18n="harnessHeading">把思考更新接入持续控制</span>
+</h3>
+<p><span data-i18n="harnessOne">非空局部 think 由 Policy 提出新判断，Brain 刷新记忆并保留阶段指令；周期刷新则可同时更新记忆与局部思考。在交接配置下，活动服务继续控制，待命服务为新上下文建立独立会话。</span>
+</p>
+<p><span data-i18n="harnessTwo">新上下文在待命服务产出完整合法动作、且后续前缀就绪后一起生效。完整 Brain 调用会先停止新提交、处理未完成动作、释放输入并确认游戏暂停，再审视阶段指令、记忆和局部判断，提交后从新观察恢复。</span>
+</p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="harness"><a class="paper-image-link" data-figure-link href="assets/paper/harness.png?v=a2a97ec95376" target="_blank" rel="noopener" aria-label="控制继续，任务上下文按需更新"><img data-figure-image src="assets/paper/harness.png?v=a2a97ec95376" width="2600" height="991" loading="lazy" alt="论文Harness图：观察到Policy和动作的闭环，以及局部更新、周期刷新、完整Brain调用和可选背景prefill。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>控制继续，任务上下文按需更新</strong>
+<p data-figure-description>局部think请求Brain更新记忆；周期刷新生成记忆与思考；完整Brain调用重新审视全部字段。背景前缀准备可服务这三种请求。</p>
+<p data-figure-note>局部更新在配置的交接点激活；完整Brain调用先确认游戏暂停，再提交新状态并恢复。</p>
+</div>
+</figcaption>
+</figure>      <details class="protocol-details" id="thinking">
+<summary data-i18n="protocolExplore">查看三种思考分支与输出示例</summary>
+      <div class="thinking-lab">
+        <div class="mode-list" role="tablist" aria-label="思考分支" data-i18n-aria="thinkingBranches" aria-orientation="vertical">
+          <button role="tab" id="tab-steady" aria-controls="thinking-panel" aria-selected="true" data-mode="steady"><span class="mode-icon" aria-hidden="true">≋</span><span><strong data-i18n="steadyTitle">保持执行</strong><small data-i18n="steadySubtitle">空 think · 沿用当前状态</small></span><span class="mode-state" aria-hidden="true"></span></button>
+          <button role="tab" id="tab-small" aria-controls="thinking-panel" aria-selected="false" tabindex="-1" data-mode="small"><span class="mode-icon" aria-hidden="true">✳</span><span><strong data-i18n="smallTitle">局部更新</strong><small data-i18n="smallSubtitle">小 think · 更新当前判断</small></span><span class="mode-state" aria-hidden="true"></span></button>
+          <button role="tab" id="tab-brain" aria-controls="thinking-panel" aria-selected="false" tabindex="-1" data-mode="brain"><span class="mode-icon" aria-hidden="true">⌘</span><span><strong data-i18n="brainModeTitle">阶段规划</strong><small data-i18n="brainSubtitle">大更新 · 调用 Brain</small></span><span class="mode-state" aria-hidden="true"></span></button>
+        </div>
+        <div class="thinking-panel" id="thinking-panel" role="tabpanel" aria-labelledby="tab-steady" tabindex="0">
+          <div class="panel-top"><span class="mono" id="branch-label">EMPTY THINK</span><span class="illustration-badge" data-i18n="illustrationBadge">协议示例</span>
+</div>
+          <h3 id="branch-title">
+</h3>
+<p id="branch-description">
+</p>
+          <div class="code-window">
+<div class="code-window-header"><span class="mono">ASSISTANT OUTPUT</span><button type="button" id="copy-example" data-i18n="copy">复制示例</button>
+</div><pre><code id="branch-code"></code></pre>
+</div>
+          <div class="branch-effects"><span data-i18n="stateEffectLabel">状态关系</span>
+<p id="branch-effects">
+</p>
+</div>
+          <p class="example-note" data-i18n="exampleNote">以下示例展示继续执行、局部更新和 Brain 调用三种响应。</p>
+        </div>
+      </div>
+      </details>
+</section>
+<section class="paper-chapter" id="realtime" aria-labelledby="realtime-title">
+<div class="chapter-copy">
+<h3 id="realtime-title"><span data-i18n="runtimeHeading">双路推理与 200ms 动作时钟</span>
+</h3>
+<p><span data-i18n="runtimeOne">一条 TP4 路生成当前响应时，另一条准备下一轮已知前缀。准备不包含尚未完成的响应或未来观察；真正复用时检查 token 与有序图像是否一致，窗口裁剪则精确重建选中的 16/8 历史。默认两路可放在一台八卡 H200 节点上。</span>
+</p>
+<p><span data-i18n="runtimeTwo">在论文的延迟感知设定中，时刻 t 的观察对应 (t+200ms, t+400ms] 的动作。提前到达的状态等待起点，迟到动作保留原窗口终点，过期状态丢弃。200ms 是观察与动作的目标节拍；窗口准备、模型生成和执行各有自己的依赖。</span>
+</p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="history"><a class="paper-image-link" data-figure-link href="assets/paper/history.png?v=4e2c342d7dd8" target="_blank" rel="noopener" aria-label="准备已知前缀，衔接双路推理与执行"><img data-figure-image src="assets/paper/history.png?v=4e2c342d7dd8" width="2600" height="1506" loading="lazy" alt="论文双路推理图：已知前缀与后续响应、观察的拼接，以及两条TP4路交替生成、准备和按200ms窗口执行控制的时序。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>准备已知前缀，衔接双路推理与执行</strong>
+<p data-figure-description>裁剪16轮历史并保留最近8轮，先准备已知前缀，待完整响应和新观察到齐后继续生成。两条TP4路与200ms动作窗口并行运行。</p>
+<p data-figure-note>实线表示前缀复用，虚线表示完成响应的依赖，橙色标记表示提前就绪的控制状态等待指定起点。</p>
+</div>
+</figcaption>
+</figure>
+<div class="chapter-copy">
+<h4><span data-i18n="efficiencyHeading">降低模型、图像处理与请求调度开销</span>
+</h4>
+<p><span data-i18n="efficiencyOne">服务侧结合编译执行、CUDA Graph、共享图像特征、精简的多模态 token 处理与异步调度。下图分别展示独立移除组件的对照，以及相同 Graph512 条件下的张量并行规模比较。</span>
+</p>
+<p><span data-i18n="efficiencyResults">在相同 Graph512 条件下，TP1、TP2、TP4、TP8 的平均请求延迟分别为 <strong>244.7、196.6、179.4、178.7 ms</strong>。TP4 扩展至 Graph8192 后为 <strong>168.9 ms</strong>。</span></p>
+</div>
+<figure class="manuscript-figure" data-paper-figure="efficiency"><a class="paper-image-link" data-figure-link href="assets/paper/efficiency.png?v=aeef06c56881" target="_blank" rel="noopener" aria-label="论文中的推理效率实验"><img data-figure-image src="assets/paper/efficiency.png?v=aeef06c56881" width="2600" height="1245" loading="lazy" alt="论文推理效率图：TP4组件移除对照和TP1、TP2、TP4、TP8的平均请求延迟。"><span class="paper-image-hint" data-figure-hint>点击查看大图</span></a>
+<figcaption>
+<div><strong data-figure-title>论文中的推理效率实验</strong>
+<p data-figure-description>Qwen3.5-9B、BF16、H200，15轮完整历史加当前观察，固定生成20个token。左图独立移除优化组件；右图在相同Graph512条件下比较TP规模。</p>
+<details class="figure-conditions">
+<summary><span data-i18n="figureConditions">实验设置与计时范围</span>
+</summary>
+<p data-figure-note>所有配置使用相同16个场景，每场景在两个节点上各重复5次（每节点80次，共160次请求），均采用32768个视觉嵌入的缓存和16384-token批处理预算。左图TP4、Graph8192；右图Graph512。计时不含图片上传与先前的前缀准备。固定20个输出token用于比较服务开销；实际部署在完整动作生成后停止。</p>
+</details>
+</div>
+</figcaption>
+</figure>
+</section>
+</section>
+    <section class="implementation section-wrap" id="implementation"><div class="section-heading"><h2 data-i18n="implementationTitle">代码与实现</h2><p data-i18n="implementationIntro">Harness、推理 Infra 和 200ms 节拍器在同一仓库中配套维护。</p></div><div class="implementation-links"><a id="code-resource" href="https://github.com/OpenMOSS/MOSS-ZETA"><strong data-i18n="implementationRepository">GitHub 仓库</strong><small data-i18n="implementationRepositoryDetail">浏览 ZETA 实现与使用说明</small></a><a class="infra-link" href="https://github.com/OpenMOSS/MOSS-ZETA/tree/main/infra"><strong>Inference Infra</strong><small data-i18n="implementationInfraDetail">模型服务、双路准备与生成</small></a><a href="https://github.com/OpenMOSS/MOSS-ZETA/tree/main/harness"><strong>Agent Harness</strong><small data-i18n="implementationHarnessDetail">任务状态、记忆与执行交接</small></a></div></section>
+  </main>
+  <footer class="site-footer section-wrap"><a class="footer-brand" href="./">ZETA</a><p>Zeroth Embodied Task Agent</p><a href="#main" data-i18n="backTop">回到顶部</a></footer>
+<dialog class="demo-dialog" id="demo-dialog" aria-labelledby="demo-dialog-title"><div class="dialog-header"><h2 id="demo-dialog-title">视频演示</h2><button type="button" class="dialog-close" id="demo-close">关闭</button></div><video id="demo-video" controls controlslist="nodownload" playsinline preload="none" width="1280" height="720"></video><div class="dialog-body"><p class="dialog-description" id="demo-description"></p><div class="dialog-actions"><button type="button" id="demo-previous">上一段</button><button type="button" id="demo-next">下一段</button></div></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>

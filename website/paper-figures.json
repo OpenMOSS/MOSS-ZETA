@@ -1,0 +1,164 @@
+{
+  "project": "ZETA",
+  "figures": [
+    {
+      "id": "framework",
+      "source_sha256": "540cc2f71a025b935c8bc85de04f23abb8a9ca7c0f967a3a26d11800e0b37633",
+      "image": "assets/paper/framework.png",
+      "pdf": "assets/paper/framework.pdf",
+      "width": 2600,
+      "height": 966,
+      "image_sha256": "210cc137e91696c35af7f0ad4977a47814bc6ab08eae82e1ca84e5f08d6f4ef7",
+      "copy": {
+        "zh": {
+          "tab": "整体框架",
+          "title": "从视觉观察到持续任务执行",
+          "description": "Policy根据当前画面、近期历史与任务上下文生成控制，并按需请求局部更新或Brain重规划。下方展示两阶段监督训练。",
+          "alt": "论文框架图：GTA V画面和历史输入ZETA Policy，结合阶段指令、局部思考和任务记忆，输出手柄动作并连接外部Brain。",
+          "note": "每个动作包含左右摇杆与两个有序的 100ms 按键状态。"
+        },
+        "en": {
+          "tab": "Framework",
+          "title": "From visual feedback to sustained action",
+          "description": "Policy uses the current frame, recent history and retained task context to generate controls, with local updates or Brain replanning when needed. The lower panel outlines two supervised training stages.",
+          "alt": "Paper framework: game images and bounded history feed ZETA Policy, with retained instruction, reasoning and memory, gamepad actions and external Brain updates.",
+          "note": "Each action combines both sticks with two ordered 100ms button states."
+        }
+      },
+      "git_path": "figures/method/zeta_control_and_training.pdf"
+    },
+    {
+      "id": "data",
+      "source_sha256": "6c39b07cbcbbc8ea5e86ac2e4bc4bb5980cbaa4610dc99316188e130034f3387",
+      "image": "assets/paper/data.png",
+      "pdf": "assets/paper/data.pdf",
+      "width": 2600,
+      "height": 1658,
+      "image_sha256": "5c7a50fc96cf5faa5fdb4fdf1339c3ae673628fd4774396bd1699772345e39c5",
+      "copy": {
+        "zh": {
+          "tab": "数据与样本",
+          "title": "从对齐轨迹到当前决策样本",
+          "description": "画面、真实手柄动作和任务标注共享时间轴；阶段指令、局部思考、任务记忆、历史与当前观察共同构成输入。",
+          "alt": "论文数据样本图：对齐的驾驶录像与动作、任务状态的有效时间，以及当前画面、小地图、OCR和空think动作响应。",
+          "note": "样本将任务状态与当前观察对齐，小地图取自同一帧。"
+        },
+        "en": {
+          "tab": "Data and samples",
+          "title": "From an aligned trajectory to a decision sample",
+          "description": "Game frames, recorded controls and task annotations share a timeline. Stage instructions, local reasoning, task memory, recent history and the current observation condition the response.",
+          "alt": "Diagram showing aligned gameplay and actions, effective task state, current frame, minimap, OCR and an empty-think action response.",
+          "note": "Task state is aligned with the current observation, including a minimap from the same frame."
+        }
+      },
+      "git_path": "figures/data/zeta_sample_context.pdf"
+    },
+    {
+      "id": "training",
+      "source_sha256": "52580f5b34dbe94e78e8428f17822ebab1b97798907a730cab20934c176317ad",
+      "image": "assets/paper/training.png",
+      "pdf": "assets/paper/training.pdf",
+      "width": 2600,
+      "height": 1775,
+      "image_sha256": "28db6be57fba21ddffc55584fa5ce152ca01a4c138d34f42fbc6546a102ca2d5",
+      "copy": {
+        "zh": {
+          "tab": "训练设计",
+          "title": "两阶段训练与滚动窗口监督",
+          "description": "动作预训练采用20轮窗口；指令微调采用16轮、保留8轮。图中展示目标响应在下一窗口转为历史，以及三种响应的监督边界。",
+          "alt": "论文训练图：20轮动作预训练、16轮保留8轮的指令微调窗口，以及继续执行、局部更新和Brain请求三种响应的监督范围。",
+          "note": "橙色下划线表示参与监督的目标；保留历史和起始think标签作为输入，空think的关闭标签也参与监督。"
+        },
+        "en": {
+          "tab": "Training",
+          "title": "Two-stage training and rolling-window supervision",
+          "description": "Action pretraining uses 20-round windows; instruction tuning uses 16 rounds and retains eight. The diagram shows supervised targets becoming history in the next window, with three response continuations expanded below.",
+          "alt": "Paper training diagram showing 20-round action pretraining, rolling 16/8 instruction-tuning windows, and supervision for continuation, local updates and Brain requests.",
+          "note": "Amber underlined continuations receive supervision. Retained history and the opening think tag are inputs; the closing tag of an empty think is supervised."
+        }
+      },
+      "git_path": "figures/training/zeta_two_stage_training.pdf"
+    },
+    {
+      "id": "harness",
+      "source_sha256": "c5e5bbb8be0178e607687ea6cc457f336e50509a2160554ddf46fb8b2b349e4a",
+      "image": "assets/paper/harness.png",
+      "pdf": "assets/paper/harness.pdf",
+      "width": 2600,
+      "height": 991,
+      "image_sha256": "a2a97ec953761affe9a67c0dbc5c6e50c0fdd57c821a56edeb42ea2547f6571c",
+      "copy": {
+        "zh": {
+          "tab": "Harness流程",
+          "title": "控制继续，任务上下文按需更新",
+          "description": "局部think请求Brain更新记忆；周期刷新生成记忆与思考；完整Brain调用重新审视全部字段。背景前缀准备可服务这三种请求。",
+          "alt": "论文Harness图：观察到Policy和动作的闭环，以及局部更新、周期刷新、完整Brain调用和可选背景prefill。",
+          "note": "局部更新在配置的交接点激活；完整Brain调用先确认游戏暂停，再提交新状态并恢复。"
+        },
+        "en": {
+          "tab": "Agent harness",
+          "title": "Continuous control, context updates when needed",
+          "description": "Local think requests Brain memory, periodic refresh requests memory and reasoning, and a full Brain call reviews all fields. Optional background prefill serves these request types.",
+          "alt": "Paper harness diagram showing the observation–Policy–action loop, local updates, periodic refresh, full Brain calls and optional background prefill.",
+          "note": "Local updates activate at the configured handoff boundary. Full Brain calls confirm pause before committing context and resuming."
+        }
+      },
+      "git_path": "figures/harness/zeta_agent_harness.pdf"
+    },
+    {
+      "id": "history",
+      "source_sha256": "c30d43dd9dfa7b278cb094e8cb74fc41d458ea05f135d0c54e92ce725b054a3c",
+      "image": "assets/paper/history.png",
+      "pdf": "assets/paper/history.pdf",
+      "width": 2600,
+      "height": 1506,
+      "image_sha256": "4e2c342d7dd8b4d6e6bcb1b910e7c28c462a5984a464709de0da63754f2a82b1",
+      "copy": {
+        "zh": {
+          "tab": "双路与时序",
+          "title": "准备已知前缀，衔接双路推理与执行",
+          "description": "裁剪16轮历史并保留最近8轮，先准备已知前缀，待完整响应和新观察到齐后继续生成。两条TP4路与200ms动作窗口并行运行。",
+          "alt": "论文双路推理图：已知前缀与后续响应、观察的拼接，以及两条TP4路交替生成、准备和按200ms窗口执行控制的时序。",
+          "note": "实线表示前缀复用，虚线表示完成响应的依赖，橙色标记表示提前就绪的控制状态等待指定起点。"
+        },
+        "en": {
+          "tab": "Routes and timing",
+          "title": "Preparing known prefixes for dual-route inference and control",
+          "description": "After trimming 16 rounds to the latest eight, the known prefix is prepared first; the completed response and new observation are appended before generation. Two TP4 routes overlap preparation and inference with scheduled 200ms control.",
+          "alt": "Paper diagram showing known-prefix preparation, appending the completed response and new observation, and dual-TP4 generation overlapping scheduled 200ms control.",
+          "note": "Solid arrows reuse prepared prefixes; dashed arrows carry completed responses. The amber marker shows an early control state waiting for its assigned start."
+        }
+      },
+      "git_path": "figures/infra/zeta_history_context.pdf"
+    },
+    {
+      "id": "efficiency",
+      "source_sha256": "9e486509e8b7cf2ff732aef4688d4e0019dde7fac56b451d01e1c5fc50a68979",
+      "image": "assets/paper/efficiency.png",
+      "pdf": "assets/paper/efficiency.pdf",
+      "width": 2600,
+      "height": 1245,
+      "image_sha256": "aeef06c56881563e46427d3a41890a4dd513973803e09cd4a259dc4ed73683f6",
+      "copy": {
+        "zh": {
+          "tab": "推理效率",
+          "title": "论文中的推理效率实验",
+          "description": "Qwen3.5-9B、BF16、H200，15轮完整历史加当前观察，固定生成20个token。左图独立移除优化组件；右图在相同Graph512条件下比较TP规模。",
+          "alt": "论文推理效率图：TP4组件移除对照和TP1、TP2、TP4、TP8的平均请求延迟。",
+          "note": "所有配置使用相同16个场景，每场景在两个节点上各重复5次（每节点80次，共160次请求），均采用32768个视觉嵌入的缓存和16384-token批处理预算。左图TP4、Graph8192；右图Graph512。计时不含图片上传与先前的前缀准备。固定20个输出token用于比较服务开销；实际部署在完整动作生成后停止。"
+        },
+        "en": {
+          "tab": "Inference efficiency",
+          "title": "Inference efficiency reported in the paper",
+          "description": "Qwen3.5-9B, BF16, H200, with 15 completed history rounds plus the current observation and 20 generated tokens. The left panel removes one optimization at a time; the right compares TP sizes at a shared Graph512 limit.",
+          "alt": "Paper inference-efficiency figure with TP4 component-removal controls and mean request latency at TP1, TP2, TP4 and TP8.",
+          "note": "Every configuration uses the same 16 scenes, repeated five times on each of two nodes (80 requests per node, 160 total), with a 32768-embedding visual cache and a 16384-token batch budget. Left: TP4, Graph8192. Right: Graph512. Timing excludes image upload and prior prefix preparation. Fixed 20-token outputs isolate serving cost; deployed generation stops at a complete action."
+        }
+      },
+      "git_path": "figures/infra/policy_efficiency.pdf"
+    }
+  ],
+  "source_revision": {
+    "commit": "b5bc2fba5f72620759f30d02afe8fd7d458fc14b"
+  }
+}

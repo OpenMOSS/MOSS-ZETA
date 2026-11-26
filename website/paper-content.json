@@ -1,0 +1,14 @@
+{
+  "project": "ZETA",
+  "data_scale": {
+    "action_pretraining_hours_approx": 4000,
+    "free_play_hours_approx": 2000,
+    "task_directed_hours_approx": 2000,
+    "instruction_tuning_hours_approx": 1200,
+    "instruction_tuning_is_subset": true,
+    "hours_scope": "Original recordings before augmentation; instruction tuning uses a subset of the same corpus."
+  },
+  "source_revision": {
+    "commit": "b5bc2fba5f72620759f30d02afe8fd7d458fc14b"
+  }
+}

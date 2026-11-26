@@ -1,0 +1,102 @@
+{
+  "coordinates": "normalized bbox center; first accepted region owns each line",
+  "limits": "Selected Chinese-subtitle pilot layout. Rules use only current-frame OCR, not task IDs, time ranges, future frames or outcomes. Region filters are a pilot heuristic, not universal semantic classification.",
+  "max_chars_per_region": 768,
+  "max_lines_per_region": 24,
+  "min_score": 0.6,
+  "regions": [
+    {
+      "id": "P",
+      "include_pattern": "[㐀-鿿]|(?i:press|hold|release|tap|use|select)",
+      "name": "左上教程、操作和交互提示",
+      "rect": [
+        0.01,
+        0.015,
+        0.36,
+        0.26
+      ]
+    },
+    {
+      "id": "U",
+      "include_pattern": "[0-9$￥¥㐀-鿿]",
+      "name": "右上金钱、弹药和状态数字",
+      "rect": [
+        0.82,
+        0.01,
+        0.995,
+        0.15
+      ]
+    },
+    {
+      "id": "L",
+      "include_pattern": "[㐀-鿿]|(?i:[0-9][0-9., ]*\\s*(?:km|m)\\b)",
+      "name": "左下小地图导航距离与中文通知",
+      "rect": [
+        0.005,
+        0.7,
+        0.24,
+        0.985
+      ]
+    },
+    {
+      "id": "B",
+      "include_pattern": "[㐀-鿿]",
+      "name": "底部任务目标及对白字幕",
+      "rect": [
+        0.16,
+        0.865,
+        0.84,
+        0.995
+      ]
+    },
+    {
+      "activation_pattern": "联系人|正在拨号|已接通|来电|通话|简讯|短信|(?i:i?fruit|contacts|dialing)",
+      "id": "R",
+      "include_pattern": "[㐀-鿿0-9]|(?i:fruit|contacts|dialing|connected)",
+      "name": "右下手机联系人、短信和通话状态",
+      "rect": [
+        0.82,
+        0.55,
+        0.99,
+        0.995
+      ]
+    },
+    {
+      "activation_pattern": "任务成[功攻]|任务失[败敗]|任务通[过過]|死亡|你死了|(?i:mission.*(?:passed|failed)|wasted|busted)",
+      "id": "C",
+      "include_pattern": "[㐀-鿿]|(?i:mission|passed|failed|wasted|busted)",
+      "name": "中央任务成功、失败和终态提示",
+      "rect": [
+        0.23,
+        0.3,
+        0.77,
+        0.68
+      ]
+    },
+    {
+      "activation_pattern": "杀毒|掃描|扫描|我的电脑|外部设备|(?i:antivirus|antf.?ater)",
+      "id": "I",
+      "include_pattern": "杀毒|扫描|掃描|病毒|程序|文件|感染|防护|电脑|关闭|完成|发现|威胁|搜集|数据|打印|丢弃|设备|确定|取消|退出|连接|安全|进度|%|(?i:^(?:file|edit|view|settings|x)$|scan|virus|remove|antf.?ater)",
+      "name": "电脑界面任务控件和程序状态",
+      "rect": [
+        0.1,
+        0.0,
+        0.81,
+        0.855
+      ]
+    },
+    {
+      "id": "K",
+      "include_pattern": "拍照|照片|缩放|返回|退出|选择|确认|继续|切换|放大|缩小|浏览|购买|取消|(?i:select|back|zoom|camera|confirm)|重试|重新尝试|(?i:retry|restart)",
+      "name": "右下相机、菜单和交互按钮说明",
+      "rect": [
+        0.65,
+        0.88,
+        0.995,
+        0.995
+      ]
+    }
+  ],
+  "single_char_min_score": 0.9,
+  "version": "joint_think_useful_ocr_regions_v1_retry_controls"
+}

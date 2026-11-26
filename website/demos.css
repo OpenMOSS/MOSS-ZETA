@@ -1,0 +1,40 @@
+.demos { padding-top: 64px; padding-bottom: 64px; }
+.demo-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 30px; margin-bottom: 24px; }
+.demo-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.demo-filters button { padding: 7px 16px; border: 1px solid #dedbe4; border-radius: 999px; background: #fff; font-size: .875rem; }
+.demo-filters button[aria-pressed="true"] { background: #34313a; color: #fff; border-color: #34313a; }
+.demo-filters button:hover { border-color: #837097; }
+.demo-counter { color: #68616f; font-size: .8125rem; }
+.demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 28px; }
+.demo-card { min-width: 0; }
+.demo-open { display: block; }
+.demo-poster { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #efedf3; border-radius: 6px; }
+.demo-poster img { width: 100%; height: 100%; object-fit: cover; }
+.demo-play { position: absolute; left: 17px; bottom: 16px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fffffff0; }
+.demo-play svg { width: 12px; height: 16px; margin-left: 3px; fill: #35313d; }
+.demo-duration { position: absolute; bottom: 17px; right: 16px; border-radius: 3px; padding: 1px 7px; background: #202027e8; color: #fff; font: .75rem/1.8 Consolas, monospace; }
+.demo-card-meta { display: flex; justify-content: space-between; gap: 12px; margin: 12px 0 6px; font-size: .8125rem; color: #74677d; }
+.demo-card h3 { font-size: 1.125rem; margin-bottom: 7px; }
+.demo-card p { color: var(--muted); font-size: 1rem; line-height: 1.8; }
+.demo-open:hover h3 { color: var(--accent); }
+.demo-dialog { width: min(1040px, calc(100vw - 40px)); padding: 0; max-height: calc(100dvh - 40px); overflow-y: auto; background: #fff; color: var(--ink); border: 1px solid #d4cedd; border-radius: 9px; }
+.demo-dialog::backdrop { background: #22212a9c; backdrop-filter: blur(4px); }
+.dialog-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 24px; }
+.dialog-header h2 { font-size: 1.375rem; }
+.dialog-close { background: #fff; border: 1px solid #cfc8d8; border-radius: 5px; padding: 5px 13px; font-size: .875rem; }
+.demo-dialog video { width: 100%; height: auto; aspect-ratio: 16/9; max-height: 62dvh; background: #0c0b0e; }
+.dialog-body { padding: 19px 24px 23px; }
+.dialog-description { font-size: 1rem; color: #524b5b; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }
+.dialog-actions button { border: 1px solid #d7d0df; border-radius: 5px; background: #fff; padding: 5px 14px; color: #655078; font-size: .875rem; }
+@media (max-width: 640px) {
+ .demos { padding-block: 43px; }
+ .demo-toolbar { margin-top: 24px; gap: 12px; }
+ .demo-filters { gap: 6px; }
+ .demo-filters button { padding: 6px 12px; font-size: .8125rem; }
+ .demo-grid { grid-template-columns: 1fr; gap: 30px; }
+ .demo-dialog { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); }
+ .dialog-header, .dialog-body { padding: 16px; }
+ .dialog-header h2 { font-size: 1.125rem; }
+ .demo-dialog video { max-height: 50dvh; }
+}

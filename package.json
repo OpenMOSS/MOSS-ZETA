@@ -1,0 +1,22 @@
+{
+  "name": "zetagame",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ZETA Policy\u2013Brain harness, inference infrastructure and recorded demos",
+  "workspaces": [
+    "harness",
+    "cadence"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "npm run start --workspace=@zeta/harness --",
+    "check": "node tools/check-layout.cjs",
+    "test": "node --test harness/tests/*.test.js cadence/scripts/*-test.js",
+    "test:harness": "npm test --workspace=@zeta/harness",
+    "test:cadence": "npm test --workspace=@zeta/cadence",
+    "test:infra": "python infra/tools/cpu_smoke.py",
+    "verify": "python tools/verify_release.py"
+  }
+}

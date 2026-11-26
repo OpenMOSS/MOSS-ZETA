@@ -1,0 +1,15 @@
+{
+  "python": "3.10",
+  "vllm": "0.20.2 (frozen local source, not an unmodified PyPI distribution)",
+  "environment_source": "/inspire/qb-ilm2/project/cq-scientific-cooperation-zone/lujiahao-253108120106/deployments/think-memory-h16k8-step4250-h100-20261105-r1/environment",
+  "not_in_git": [
+    "CUDA toolkit",
+    "venv and installed wheels",
+    "vLLM compiled shared objects",
+    "FlashInfer cache",
+    "checkpoint/model weights and tokenizer/processor assets",
+    "secrets and platform credentials"
+  ],
+  "gpu_acceptance_of_this_snapshot": "NOT RUN; source-only extraction",
+  "deployment_inputs": "Compatible model/tokenizer/processor assets, matching compiled runtime, API keys and generated instance configs; no private training data or evaluation receipt required."
+}

@@ -1,0 +1,209 @@
+{
+  "project": "ZETA",
+  "featured": {
+    "id": "promo",
+    "kind": "promotional",
+    "title": {
+      "zh": "ZETA 宣传 Demo",
+      "en": "The ZETA demo"
+    },
+    "description": {
+      "zh": "从驾驶、飞行到更多游戏场景，看视觉、思考与控制如何协同。",
+      "en": "See perception, reasoning and control come together across driving, flight and more."
+    },
+    "video": "assets/demos/promo.mp4",
+    "poster": "assets/demos/promo.jpg",
+    "duration_seconds": 69,
+    "width": 1920,
+    "height": 1080,
+    "frame_rate": 30,
+    "video_sha256": "979c80ecf7ae50cff1af5078d857be3fbbfe3bbb966d92f89d078711eee4115c",
+    "poster_sha256": "17403390e80973dff15e3a2d64c6a86bfc97e2ff8cf09f5f4eae13d6b229fc5f",
+    "audio": true,
+    "video_size_bytes": 41748130
+  },
+  "clips": [
+    {
+      "id": "escape",
+      "title": {
+        "zh": "成功甩掉警察",
+        "en": "Escape the police"
+      },
+      "description": {
+        "zh": "从两星追捕到解除通缉，任务提示切换为将车开回车店。",
+        "en": "A continuous escape from a two-star pursuit until the wanted level clears and the objective changes to returning the car."
+      },
+      "category": "land",
+      "video": "assets/demos/escape.mp4",
+      "poster": "assets/demos/escape.jpg",
+      "duration_seconds": 70,
+      "width": 1280,
+      "height": 720,
+      "video_sha256": "2a5bce5b4bd6112f37237c2e48e41b49ba8c65b4549a8f59b4d9a27861eac412",
+      "poster_sha256": "2fcf35dcdff61e4bbe7abecb288f912bbc4daad8da5e352adde1624cde36ad19",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 30623599
+    },
+    {
+      "id": "sniper",
+      "title": {
+        "zh": "远距离狙击目标",
+        "en": "Track and snipe a target"
+      },
+      "description": {
+        "zh": "通过瞄准镜跟踪远处移动目标，调整准星并射击。",
+        "en": "Track a distant moving target through the scope, adjust aim and fire."
+      },
+      "category": "combat",
+      "video": "assets/demos/sniper.mp4",
+      "poster": "assets/demos/sniper.jpg",
+      "duration_seconds": 10,
+      "width": 1280,
+      "height": 720,
+      "video_sha256": "618d1c8e2ad609c8fbc7e3427d4d6b17e484b9cd2976f6e59e9264fd76b46230",
+      "poster_sha256": "92e63fe726fe2c189c7a489e698ca44a91fd36a2bb735cb821fc529fe0985795",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 2330803
+    },
+    {
+      "id": "aircombat",
+      "title": {
+        "zh": "直升机侧舱空战",
+        "en": "Fire from a helicopter"
+      },
+      "description": {
+        "zh": "从直升机侧舱瞄准追来的敌机，连续跟踪射击直至机身起火。",
+        "en": "Track a pursuing helicopter from the side door and keep firing until it catches fire."
+      },
+      "category": "combat",
+      "video": "assets/demos/aircombat.mp4",
+      "poster": "assets/demos/aircombat.jpg",
+      "duration_seconds": 31,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "d2ee3bd539c478530dc54895ac390deea395c4734315f5ea7329569a713e4527",
+      "poster_sha256": "05cf5b4e1d4502063f980d931ba6279d8382441fdc892e4e471ba6aea64bb33e",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 11400758
+    },
+    {
+      "id": "hillchase",
+      "title": {
+        "zh": "越野摩托追赶飞机",
+        "en": "Chase a plane across the hills"
+      },
+      "description": {
+        "zh": "沿山地追踪冒烟的飞机，冲下陡坡、跃过公路护栏后继续前进。",
+        "en": "Follow a smoking aircraft across the hills, descend steep slopes and jump a roadside barrier."
+      },
+      "category": "land",
+      "video": "assets/demos/hillchase.mp4",
+      "poster": "assets/demos/hillchase.jpg",
+      "duration_seconds": 37,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "f5277e6b4e329023d33b9236b797bac97b3dc75257c693bb5ea82e6622cd81c4",
+      "poster_sha256": "caa03537c7aa7ad8f00a929fc4f92d23066ef78253b69598bd35879b18bfa415",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 28498992
+    },
+    {
+      "id": "tunnel",
+      "title": {
+        "zh": "四星追捕下穿越隧道",
+        "en": "Ride through a four-star pursuit"
+      },
+      "description": {
+        "zh": "骑摩托车穿过弯曲管道、工地与地铁站，在通缉中连续转向。",
+        "en": "Ride through curved pipes, a construction area and a metro station during a four-star pursuit."
+      },
+      "category": "land",
+      "video": "assets/demos/tunnel.mp4",
+      "poster": "assets/demos/tunnel.jpg",
+      "duration_seconds": 36,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "cf0298066db1709fdcbd4967234238c595cd397b081d99e9be13fc5063f2572a",
+      "poster_sha256": "2e3ea38254941265ff5cdf9673e29eca24fb9fca20b9d53e9b41a11b635a4198",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 26950600
+    },
+    {
+      "id": "dive",
+      "title": {
+        "zh": "从码头跃入海中",
+        "en": "Dive from the pier"
+      },
+      "description": {
+        "zh": "从码头跃入海中，下潜游动后重新浮出水面。",
+        "en": "Jump from the pier, swim underwater, then return to the surface."
+      },
+      "category": "water",
+      "video": "assets/demos/dive.mp4",
+      "poster": "assets/demos/dive.jpg",
+      "duration_seconds": 30,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "719e13abd23764b45da2a4e8a6c91063af22dd1e280cb849958fbc4f3932236d",
+      "poster_sha256": "8342cb78635c0da09b441ef72a35d8bb31fb157783e275b29ff1904f8feee8a6",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 10098854
+    },
+    {
+      "id": "chase",
+      "title": {
+        "zh": "翻越围栏追赶目标",
+        "en": "Vault a fence in pursuit"
+      },
+      "description": {
+        "zh": "追随目标冲入院落，翻过围栏后沿屋顶继续追赶。",
+        "en": "Chase a target into a yard, vault the fence and continue across the rooftops."
+      },
+      "category": "land",
+      "video": "assets/demos/chase.mp4",
+      "poster": "assets/demos/chase.jpg",
+      "duration_seconds": 10,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "c310c6ccb51fe6a645aca2a8421faf36fda8ecd8d7ab8146b5a225222720b94e",
+      "poster_sha256": "6f6c4f66cfcffa2f927df1a30b929f66ce08433ffe7a8b846af1eb6ee570cf93",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 9301390
+    },
+    {
+      "id": "demolition",
+      "title": {
+        "zh": "拖塌山坡建筑",
+        "en": "Pull down a hillside structure"
+      },
+      "description": {
+        "zh": "驾驶皮卡牵引山坡建筑，随后可见建筑结构坍塌。",
+        "en": "Tow a hillside structure with a pickup, followed by its visible collapse."
+      },
+      "category": "land",
+      "video": "assets/demos/demolition.mp4",
+      "poster": "assets/demos/demolition.jpg",
+      "duration_seconds": 13,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "6f27ab88f656dc770649c704b1500f61744c06ceaac3f3e94e58a6e4285860dd",
+      "poster_sha256": "a066ba493dcc0e07260da054a92e3938f24613b04f06a4619a30f32bd6b48673",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 5660237
+    }
+  ]
+}

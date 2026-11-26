@@ -1,0 +1,29 @@
+name: ZETA component checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  components:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: python -m pip install Pillow Jinja2
+      - run: python infra/tools/cpu_smoke.py
+      - run: python cadence/scripts/stream-cadence-test.py
+      - run: python cadence/scripts/stream-handoff-test.py
+      - run: python cadence/scripts/stream-watchdog-notification-test.py
+      - run: python infra/tools/verify_snapshot.py
+      - run: npm run verify

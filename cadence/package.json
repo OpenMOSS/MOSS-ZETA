@@ -1,0 +1,13 @@
+{
+  "name": "@zeta/cadence",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ZETA production 200ms capture, submission and streamed-action scheduling components",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test scripts/*-test.js"
+  }
+}

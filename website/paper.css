@@ -1,0 +1,34 @@
+.paper-section { padding-top: 62px; padding-bottom: 25px; }
+.paper-contents { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; margin: 28px 0 10px; padding: 17px 0; border-block: 1px solid var(--line); }
+.paper-contents a { color: var(--accent); font-size: .9375rem; }
+.paper-contents a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.paper-chapter { padding: 54px 0 6px; scroll-margin-top: 30px; }
+.chapter-copy { max-width: 850px; margin-inline: auto; }
+.chapter-copy h3 { font-size: clamp(1.4rem, 2.1vw, 1.75rem); margin-bottom: 22px; letter-spacing: -.02em; }
+.chapter-copy h4 { font-size: 1.2rem; margin: 36px 0 18px; }
+.chapter-copy > p { font-size: 1.0625rem; line-height: 1.95; margin-top: 17px; }
+.chapter-copy strong { font-weight: 650; }
+.manuscript-figure { margin: 28px auto 18px; max-width: 1080px; }
+.paper-image-link { display: block; padding: 14px 0; }
+.paper-image-link img { width: 100%; height: auto; object-fit: contain; }
+.paper-image-hint { display: block; margin-top: 12px; color: #6b6374; font-size: .8125rem; text-align: right; }
+.manuscript-figure figcaption { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; max-width: 980px; margin: auto; padding: 20px 0; border-top: 1px solid var(--line); }
+.manuscript-figure figcaption strong { display: block; margin-bottom: 10px; font-size: 1rem; font-weight: 600; }
+.manuscript-figure figcaption p { font-size: .9375rem; color: var(--muted); line-height: 1.85; }
+.manuscript-figure figcaption [data-figure-note] { font-size: .875rem; color: #706677; margin-top: 10px; }
+.figure-conditions { margin-top: 12px; font-size: .875rem; }
+.figure-conditions summary { cursor: pointer; color: var(--accent); }
+.paper-chapter .protocol-details { margin-bottom: 12px; }
+.chapter-copy .paper-source-note { font-size: .875rem; line-height: 1.85; color: #6b6275; padding-top: 19px; margin-top: 26px; border-top: 1px solid var(--line); }
+.paper-source-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 4px; }
+@media (max-width: 640px) {
+ .paper-section { padding-top: 42px; }
+ .paper-contents { gap: 9px 20px; margin-top: 22px; }
+ .paper-contents a { font-size: .875rem; }
+ .paper-chapter { padding-top: 36px; }
+ .chapter-copy h3 { margin-bottom: 19px; }
+ .chapter-copy > p { font-size: 1rem; line-height: 1.9; }
+ .manuscript-figure { margin-top: 20px; }
+ .paper-image-link { padding: 8px 0; }
+ .manuscript-figure figcaption { flex-direction: column; gap: 13px; padding-block: 17px; }
+}

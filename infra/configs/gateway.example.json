@@ -1,0 +1,20 @@
+{
+  "endpoints": [
+    "http://127.0.0.1:18807",
+    "http://127.0.0.1:18808"
+  ],
+  "api_key_files": [
+    "/PRIVATE/policy.key",
+    "/PRIVATE/policy.key"
+  ],
+  "gateway_api_key_file": "/PRIVATE/gateway.key",
+  "served_model_name": "zeta-policy",
+  "system_template": "/CHECKOUT/serving/system_prompt.txt",
+  "session_db": "/NEW_RUN/sessions.sqlite3",
+  "max_sessions": 1,
+  "result_cache_size": 64,
+  "window": {
+    "max": 16,
+    "keep": 8
+  }
+}

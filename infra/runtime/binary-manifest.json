@@ -1,0 +1,42 @@
+{
+  "external_root": "/EXTERNAL_MATCHING_ENV",
+  "files": [
+    {
+      "path": "vllm/_C.abi3.so",
+      "bytes": 585403008,
+      "sha256": "b80c68222f7e86fc3c09545a0f9c46d613f72baa4e4d714f807ced6c728e0c9b"
+    },
+    {
+      "path": "vllm/_C_stable_libtorch.abi3.so",
+      "bytes": 194196616,
+      "sha256": "fc962e25df64c1af903734064af2f9654982878373c3139b724d2bfee2379b4b"
+    },
+    {
+      "path": "vllm/_moe_C.abi3.so",
+      "bytes": 292057104,
+      "sha256": "33f45a964962c0f8611f666b07b1384f01ffce094f98b09b194f00c24f8a3977"
+    },
+    {
+      "path": "vllm/cumem_allocator.abi3.so",
+      "bytes": 106848,
+      "sha256": "7006d1fe483af96a97d686fe4894c88429fbda6ed37548748a9521d1b054a224"
+    },
+    {
+      "path": "vllm/third_party/deep_gemm/_C.cpython-310-x86_64-linux-gnu.so",
+      "bytes": 21035576,
+      "sha256": "192cae8499837329867fa4a608c9ca943ee841b1a221c702b57e80983534d4fe"
+    },
+    {
+      "path": "vllm/vllm_flash_attn/_vllm_fa2_C.abi3.so",
+      "bytes": 295686368,
+      "sha256": "18c5d2377547d745a3dec33210ac1cd480803da69f80b09a884ebaaa89f9d23f"
+    },
+    {
+      "path": "vllm/vllm_flash_attn/_vllm_fa3_C.abi3.so",
+      "bytes": 1060391752,
+      "sha256": "4186788b3b22f7160866e8a63107ece4345ae07ecabd021fecbfbbedb8d0bc4e"
+    }
+  ],
+  "note": "External ABI-matched binaries; not copied into Git.",
+  "provenance": "Rehashed from final outputs/infra_fairness_20261122/runtime/optimized; native libraries remain external."
+}

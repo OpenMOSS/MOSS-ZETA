@@ -1,0 +1,10 @@
+{
+  "period_ms": 200,
+  "submission_offset_ms": 80,
+  "submission_max_lateness_ms": 100,
+  "inference_allowance_ms": 200,
+  "execution_window_ms": 200,
+  "watchdog_timeout_ms": 1000,
+  "window_max_rounds": 16,
+  "window_keep_rounds": 8
+}
