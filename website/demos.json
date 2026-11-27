@@ -281,8 +281,8 @@
         "en": "Break free from a police officer"
       },
       "description": {
-        "zh": "在自动快速反应（QTE）辅助下，角色按 B 键挣脱并推开警员。",
-        "en": "With automated quick-time-event assistance, a B-button input breaks the hold and pushes the officer away."
+        "zh": "角色按 B 键挣脱并推开警员。",
+        "en": "A press of the B button breaks the hold, and the character pushes the officer away."
       },
       "category": "gtavi",
       "video": "assets/demos/breakaway.mp4",
@@ -373,8 +373,8 @@
         "en": "React at the car door"
       },
       "description": {
-        "zh": "警察拉开车门时，Policy 配合自动 QTE 辅助完成反制，角色留在驾驶位并驶离。",
-        "en": "As an officer opens the car door, the policy and an automated quick-time-event helper counter the attempt. The character stays at the wheel and drives off."
+        "zh": "角色留在驾驶位并驶离。",
+        "en": "The character stays at the wheel and drives off."
       },
       "category": "gtavi",
       "video": "assets/demos/cardoor.mp4",
