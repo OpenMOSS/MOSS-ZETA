@@ -204,6 +204,190 @@
       "original_speed": true,
       "audio": true,
       "video_size_bytes": 5660237
+    },
+    {
+      "id": "pilot",
+      "title": {
+        "zh": "驾驶飞机调整姿态",
+        "en": "Bank the plane"
+      },
+      "description": {
+        "zh": "左摇杆两次偏转，飞机从平飞转入侧倾。",
+        "en": "Two left-stick inputs roll the plane from level flight into a bank."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/pilot.mp4",
+      "poster": "assets/demos/pilot.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "9567ad58f543cf7284e2ef2035e8acf9977002752065bd310e86270b61e9036f",
+      "poster_sha256": "866761994ed21993e31f5e0a3b198e9dd08a9e44cb5450538b54d0cfdb35b7fa",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 1668184
+    },
+    {
+      "id": "crossfire",
+      "title": {
+        "zh": "路口与警方交火",
+        "en": "Firefight at an intersection"
+      },
+      "description": {
+        "zh": "角色在路口转身瞄准，与迎面的警员交火。",
+        "en": "At an intersection, the character turns to aim and exchanges fire with police."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/crossfire.mp4",
+      "poster": "assets/demos/crossfire.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "05b2f01e4e82b07d272675f3ac2ed254353b4a5d5d34e74b2b6c14209a5fd15e",
+      "poster_sha256": "98c829ffa240a2edcf1cf155dc224004bdac80ba4bac0606eb283dc84299aa8f",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 2952912
+    },
+    {
+      "id": "garage",
+      "title": {
+        "zh": "停车场回身开火",
+        "en": "Return fire in a parking garage"
+      },
+      "description": {
+        "zh": "角色在停车场转身，朝车道方向开火后移动。",
+        "en": "Inside a parking garage, the character turns, fires down the lane and moves on."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/garage.mp4",
+      "poster": "assets/demos/garage.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "c8c19ad157f19577cf79404a0254f08b5f057a03e300b66fe9061670c01b92dc",
+      "poster_sha256": "237227057aa85a70657ab72911d5e56c1a5ecac26574b356008e6bd3258e71c5",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 2225439
+    },
+    {
+      "id": "breakaway",
+      "title": {
+        "zh": "挣脱警员控制",
+        "en": "Break free from a police officer"
+      },
+      "description": {
+        "zh": "在自动快速反应（QTE）辅助下，角色按 B 键挣脱并推开警员。",
+        "en": "With automated quick-time-event assistance, a B-button input breaks the hold and pushes the officer away."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/breakaway.mp4",
+      "poster": "assets/demos/breakaway.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "30ccd089e82f9345156734401fed74922ce8eafd36037973a08bdcbc5e46adaa",
+      "poster_sha256": "39df7ebdeae1f7aebff0d20b4262da66a936d206e0c7fdbaf4af0cd825fafc2e",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 2562307
+    },
+    {
+      "id": "skydive",
+      "title": {
+        "zh": "离机跳伞",
+        "en": "Jump from a plane"
+      },
+      "description": {
+        "zh": "角色跃出机舱，在海面上空进入自由落体。",
+        "en": "The character leaves the aircraft and enters free fall over the ocean."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/skydive.mp4",
+      "poster": "assets/demos/skydive.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "4110fff464151c3ed9207c71f990723eccc92d0a34e0e2cc64e4347d83028cc1",
+      "poster_sha256": "680e8ee5be99c0f58f2d541e1b469563ec48c3cdd7162ff03aa0f0972ee81390",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 1996293
+    },
+    {
+      "id": "speedboat",
+      "title": {
+        "zh": "驾驶快艇出海",
+        "en": "Pilot a speedboat"
+      },
+      "description": {
+        "zh": "快艇驶过开阔水面，船尾拖出两道白浪。",
+        "en": "A speedboat crosses open water, leaving a twin wake behind it."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/speedboat.mp4",
+      "poster": "assets/demos/speedboat.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "f21d5d4bcd30fa4b3fe40184d12ae32b8f26fe8575f229b809f93b61baf13358",
+      "poster_sha256": "a65939b2f44c271f5c950cd7470966465e75e011ee5162f503ff5e35e3c66b43",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 2866287
+    },
+    {
+      "id": "streetfight",
+      "title": {
+        "zh": "街头近身搏斗",
+        "en": "Street brawl"
+      },
+      "description": {
+        "zh": "角色在街边车辆之间近身出拳，将对手击倒。",
+        "en": "The character throws punches between parked vehicles and knocks an opponent down."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/streetfight.mp4",
+      "poster": "assets/demos/streetfight.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "1024e38f40faebe3bb38c8aefba28da8a66708994427aee0d64ba9dc65288a74",
+      "poster_sha256": "1dcb8cf89380cf4320a15bb567fca919ad6de4d2b93da2d4a2184ee1ce354072",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 3974902
+    },
+    {
+      "id": "cardoor",
+      "title": {
+        "zh": "车门前的快速反应",
+        "en": "React at the car door"
+      },
+      "description": {
+        "zh": "警察拉开车门时，Policy 配合自动 QTE 辅助完成反制，角色留在驾驶位并驶离。",
+        "en": "As an officer opens the car door, the policy and an automated quick-time-event helper counter the attempt. The character stays at the wheel and drives off."
+      },
+      "category": "gtavi",
+      "video": "assets/demos/cardoor.mp4",
+      "poster": "assets/demos/cardoor.jpg",
+      "duration_seconds": 5,
+      "width": 1280,
+      "height": 720,
+      "frame_rate": 30,
+      "video_sha256": "77c30618820015a3c92bd11a67d3f9cc53eb1bdb6ff866fe568186616d2ce921",
+      "poster_sha256": "b0200687acbbf476125c95bd5c9cc90a5b1e7a1ad57d1f17df338409c9e311ea",
+      "original_speed": true,
+      "audio": true,
+      "video_size_bytes": 1941236
     }
   ]
 }
